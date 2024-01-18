@@ -55,10 +55,19 @@ async function run() {
     })
 
 
+    // verify admin
+    const verifyAdmin = async (req, res, next) =>{
+      const email = req.decoded.email
+      const query = {email: email}
+      const user = await usersCollection.findOne(query)
+      if(user?.role !== 'admin'){
+        return res.status(403).send({error: true, message: 'Forbidden Access'})
+      }
+      next()
+    }
 
     // users collection
-
-    app.get('/users', async (req, res) =>{
+    app.get('/users', verifyJWT, verifyAdmin, async (req, res) =>{
       const result = await usersCollection.find().toArray()
       res.send(result)
     })
