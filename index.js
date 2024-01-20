@@ -118,9 +118,15 @@ async function run() {
 
     // menu collection
     app.get('/menu', async(req, res)=>{
-        const result = await menuCollection.find().toArray()
+        const result = await menuCollection.find().sort({_id: -1}).toArray()
         res.send(result)
     })
+
+    app.post('/menu', verifyJWT, verifyAdmin, async(req, res)=>{
+      const item = req.body
+      const result = await menuCollection.insertOne(item)
+      res.send(result)
+  })
 
     // cart collection
     app.get('/carts', verifyJWT, async(req, res)=>{
