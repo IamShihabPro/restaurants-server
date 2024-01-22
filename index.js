@@ -109,27 +109,34 @@ async function run() {
       res.send(result)
     })
 
-    app.delete('/users/:id', async(req, res) => {
+  app.delete('/users/:id', async(req, res) => {
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
       const result = await usersCollection.deleteOne(query)
       res.send(result)
-    })
+  })
 
     // menu collection
-    app.get('/menu', async(req, res)=>{
+  app.get('/menu', async(req, res)=>{
         const result = await menuCollection.find().sort({_id: -1}).toArray()
         res.send(result)
-    })
+  })
 
-    app.post('/menu', verifyJWT, verifyAdmin, async(req, res)=>{
+  app.post('/menu', verifyJWT, verifyAdmin, async(req, res)=>{
       const item = req.body
       const result = await menuCollection.insertOne(item)
       res.send(result)
   })
 
-    // cart collection
-    app.get('/carts', verifyJWT, async(req, res)=>{
+  app.delete('/menu/:id', verifyJWT, verifyAdmin, async(req, res) =>{
+    const id = req.params.id
+    const query = {_id: new ObjectId(id)}
+    const result = await menuCollection.deleteOne(query)
+    res.send(result)
+  })
+
+  // cart collection
+  app.get('/carts', verifyJWT, async(req, res)=>{
       const email = req.query.email
       // console.log(email);
       if(!email){
