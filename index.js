@@ -49,6 +49,7 @@ async function run() {
     const menuCollection = client.db("foodie").collection("menu");
     const cartCollection = client.db("foodie").collection("carts");
     const paymentCollection = client.db("foodie").collection("payments");
+    const reviewCollection = client.db('foodie').collection('reviews')
 
     // jwt
     app.post("/jwt", (req, res) => {
@@ -196,6 +197,20 @@ async function run() {
       const result = await cartCollection.deleteOne(query);
       res.send(result);
     });
+
+     //review collection
+     app.get('/reviews', async(req, res)=>{
+      const result = await reviewCollection.find().sort({_id: -1}).toArray()
+      res.send(result)
+    })
+
+     // reviews collection
+     app.post('/reviews', async(req, res)=>{
+      const item = req.body
+      const result = await reviewCollection.insertOne(item)
+      res.send(result)
+     })
+
 
 
     // create payment intent
