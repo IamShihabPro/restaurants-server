@@ -50,6 +50,7 @@ async function run() {
     const cartCollection = client.db("foodie").collection("carts");
     const paymentCollection = client.db("foodie").collection("payments");
     const reviewCollection = client.db('foodie').collection('reviews')
+    const bookingCollection = client.db('foodie').collection('bookings')
 
     // jwt
     app.post("/jwt", (req, res) => {
@@ -210,6 +211,44 @@ async function run() {
       const result = await reviewCollection.insertOne(item)
       res.send(result)
      })
+
+    //  bookings
+    app.post("/bookings", async (req, res) => {
+      const item = req.body;
+      console.log(item);
+      const result = await bookingCollection.insertOne(item);
+      res.send(result);
+    });
+
+    app.get("/bookings", verifyJWT, verifyAdmin, async (req, res) => {
+      const result = await bookingCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.delete("/bookings/:id", verifyJWT, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingCollection.deleteOne(query);
+      res.send(result);
+    });
+
+
+    // app.get("/bookings", verifyJWT, async (req, res) => {
+    //   const email = req.query.email;
+    //   // console.log(email);
+    //   if (!email) {
+    //     res.send([]);
+    //   }
+    //   const decodedEmail = req.decoded.email;
+    //   if (email !== decodedEmail) {
+    //     return res
+    //       .status(403)
+    //       .send({ error: true, message: "forbidden access" });
+    //   }
+    //   const query = { email: email };
+    //   const result = await bookingCollection.find(query).toArray();
+    //   res.send(result);
+    // });
 
 
 
