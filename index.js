@@ -287,6 +287,10 @@ async function run() {
     });
     
     
+    app.get("/payments", verifyJWT, verifyAdmin, async (req, res) => {
+      const result = await paymentCollection.find().sort({_id: -1}).toArray();
+      res.send(result);
+    });
 
     app.post('/payments', verifyJWT, async(req, res) => {
       const payment = req.body
