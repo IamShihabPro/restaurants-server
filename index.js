@@ -212,6 +212,14 @@ async function run() {
       res.send(result)
      })
 
+     app.delete("/reviews/:id", verifyJWT, verifyAdmin, async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await reviewCollection.deleteOne(query);
+      res.send(result);
+    });
+
+
     //  bookings
     app.post("/bookings", async (req, res) => {
       const item = req.body;
